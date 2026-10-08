@@ -1,0 +1,10 @@
+name: face_events
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - ffmpeg          # with libx264; used for cropping, probing and previews
+  - pip
+  - pip:
+      - eventcv==1.0.7   # event simulator (version validated with video_to_events/run.sh)
+      - h5py             # optional: read the .h5 event files
