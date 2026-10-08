@@ -29,12 +29,11 @@ tail ~/si_test_out/pipeline.log
 
 `EVENTS_MAX_FRAMES=150` limits events to the first 5 s of each clip (testing only).
 
-## Full run (detached, survives closing the terminal)
+## Full run
 
 ```bash
 conda activate face_events
-EVENTS=1 setsid nohup scripts/pipeline.sh > /dev/null 2>&1 &
-tail -f ~/datasets/seamless_interaction_faces/pipeline.log
+EVENTS=1 scripts/pipeline.sh --label naturalistic --split train --batches 0-99
 ```
 
 Select what to process like the dataset is organised (as the repo's own batch downloads do):
