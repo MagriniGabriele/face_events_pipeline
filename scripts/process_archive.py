@@ -28,26 +28,31 @@ from seamless_interaction.fs import DatasetConfig, SeamlessInteractionFS  # noqa
 
 
 REPO = Path(__file__).resolve().parent.parent
-EVENTCV = os.environ.get("EVENTCV") or shutil.which("eventcv") or "eventcv"
 
 
 def generate_events(crop_mp4: Path, out_dir: Path) -> Path:
     """Simulate events for one face crop -> <crop stem>_events.h5 (events/{t,x,y,p}).
 
-    Uses video_to_events/run.sh. Env: EVENTS_SCALE="W H" (resample to the sensor
-    resolution), EVENTS_MAX_FRAMES=N (testing only). Without EVENTS_SCALE the
-    events keep the crop resolution, so crop keypoints are already in event coords.
+    Same settings as video_to_events/run.sh (noise off, 8x upsample, eventcv defaults
+    otherwise), via the Python API so it can run on the GPU. Env: EVENTS_DEVICE=gpu|cpu
+    (default: gpu if available), EVENTS_SCALE="W H" (resample to the sensor resolution),
+    EVENTS_MAX_FRAMES=N (testing only). Without EVENTS_SCALE the events keep the crop
+    resolution, so crop keypoints are already in event coords.
     """
+    import eventcv
+
     out = out_dir / f"{crop_mp4.stem}_events.h5"
-    extra = []
+    kw = {}
     if os.environ.get("EVENTS_SCALE"):
-        extra += ["--scale", *os.environ["EVENTS_SCALE"].split()]
+        kw["scale"] = tuple(int(v) for v in os.environ["EVENTS_SCALE"].split())
     if os.environ.get("EVENTS_MAX_FRAMES"):
-        extra += ["--max-frames", os.environ["EVENTS_MAX_FRAMES"]]
+        kw["max_frames"] = int(os.environ["EVENTS_MAX_FRAMES"])
+    device = os.environ.get("EVENTS_DEVICE") or ("gpu" if eventcv.gpu_available() else "cpu")
     tmp = out.with_suffix(".tmp.h5")
-    subprocess.run(["bash", str(REPO / "video_to_events/run.sh"), str(crop_mp4), str(tmp), *extra],
-                   check=True, env={**os.environ, "EVENTCV": EVENTCV})
+    eventcv.simulate(str(crop_mp4), out=str(tmp), device=device, shot_noise_rate_hz=0,
+                     leak_rate_hz=0, upsample="8", compression=1, **kw)
     tmp.rename(out)  # atomic: a partial file is never mistaken for a finished one
+    print(f"  events on {device}")
     return out
 
 
@@ -142,8 +147,10 @@ def main() -> None:
             if crop is None:  # no annotations / no valid face: not retryable, just skip
                 skipped.append(video.stem)
                 continue
-            for ext in (".npz", ".json"):
-                shutil.copy2(video.with_suffix(ext), out_dir / f"{video.stem}{ext}")
+            for ext in (".npz", ".json"):  # originals may be read-only: replace, don't keep mode
+                dst = out_dir / f"{video.stem}{ext}"
+                dst.unlink(missing_ok=True)
+                shutil.copyfile(video.with_suffix(ext), dst)
             if args.events:
                 events_step(crop, out_dir)
         except Exception as e:

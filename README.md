@@ -65,9 +65,10 @@ or `EVENTS_SCALE` to fit your disk. The run stops when free space drops below `M
 | `EVENTS` | unset | `1` = simulate events |
 | `EVENTS_SCALE` | unset | `"W H"`: events at this resolution; keypoints are remapped |
 | `EVENTS_MAX_FRAMES` | unset | testing only: cap frames per clip |
-| `EVENTCV` | `eventcv` on PATH | simulator binary |
+| `EVENTS_DEVICE` | `gpu` if available, else `cpu` | where eventcv simulates (`gpu` = compute shader via Vulkan; same events as CPU) |
 | `MIN_FREE_GB` | `20` | abort when free disk space is below this |
 | `SI_REPO` | `seamless_interaction` | path to the Meta repo clone |
+| `FEP_PYTHON` | `python` on PATH | interpreter to use (the active env by default) |
 
 ## Output
 
@@ -96,8 +97,11 @@ Keypoints are COCO-WholeBody (133 × (x, y, score)): 0–16 body, 17–22 feet, 
 ```bash
 # keypoints on a crop (window, q to quit)
 python scripts/visualize_keypoints.py OUT/.../<id>_face640.mp4 --show
-# events -> preview video
-eventcv render OUT/.../<id>_face640_events.h5 preview.mp4 --dt-ms 33.333 --fps 30
+# events + face keypoints -> <id>_face640_events_render.mp4 (add --show for a live window,
+# --all for body/hands, --no-kpts for events only, --max-frames N for a quick look)
+python scripts/render_events.py OUT/.../<id>_face640_events.h5
+# RGB crop + events (rendered by eventcv) + keypoints -> <id>_face640_overlay.mp4
+python scripts/overlay_events.py OUT/.../<id>_face640.mp4 [--mode side] [--max-frames 300]
 ```
 
 ## Files
@@ -107,4 +111,6 @@ eventcv render OUT/.../<id>_face640_events.h5 preview.mp4 --dt-ms 33.333 --fps 3
 - `scripts/process_archive.py`: one archive: download → crop → events → cleanup
 - `scripts/crop_faces.py`: face crop for a clip or a folder (also usable on its own)
 - `scripts/visualize_keypoints.py`: draw keypoints on a video
-- `video_to_events/run.sh`: EventCV settings (noise off, 8× upsampling); extra flags pass through
+- `scripts/overlay_events.py`: events (via `eventcv render`) over the RGB crop + face keypoints, or side by side (`--mode side`)
+- `scripts/render_events.py`: render an events .h5 to .mp4 with keypoints overlaid (streams, works on full clips)
+- `video_to_events/run.sh`: reference EventCV settings (noise off, 8× upsampling), CLI/CPU only; the pipeline uses the same settings through the Python API
