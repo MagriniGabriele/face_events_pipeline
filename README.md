@@ -24,7 +24,7 @@ the Meta repo installed in editable mode (its `assets/filelist.csv` lists every 
 ```bash
 RAW_DIR=~/si_test_raw OUT_DIR=~/si_test_out EVENTS=1 EVENTS_MAX_FRAMES=150 \
   scripts/pipeline.sh --label naturalistic --split dev --batches 0 --limit 1 --max-clips 2
-tail -f ~/si_test_out/pipeline.log      # progress appears per clip, live
+timeout 60 tail -f ~/si_test_out/pipeline.log      # progress appears per clip, live
 ```
 
 `EVENTS_MAX_FRAMES=150` limits events to the first 5 s of each clip, `--max-clips 2` to
