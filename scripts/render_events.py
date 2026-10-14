@@ -5,7 +5,9 @@ t in [i/fps, (i+1)/fps) and keypoint row i. Events are streamed in chunks, so fu
 clips (hundreds of millions of events) do not need to fit in memory.
 
 Keypoints default to <id>_face640_events_kpts.npz (when events were rescaled) or
-<id>_face640.npz (same coordinates as the events).
+<id>_face640.npz (same coordinates as the events). The face is drawn from
+<id>_face640_landmarks.npz (scripts/generate_landmarks.py, rescaled to the event
+resolution) when it exists, else from the COCO face keypoints (--coco-face forces those).
 
 Usage:
   python scripts/render_events.py OUT/.../<id>_face640_events.h5 [-o out.mp4] [--all] [--show]
@@ -18,6 +20,8 @@ from pathlib import Path
 import cv2
 import h5py
 import numpy as np
+
+from generate_landmarks import draw_landmarks, landmarks_path, load_landmarks
 
 FACE = range(23, 91)
 GROUPS = {
@@ -73,6 +77,8 @@ def main() -> None:
     ap.add_argument("--show", action="store_true", help="show live window (q to quit)")
     ap.add_argument("--max-frames", type=int)
     ap.add_argument("--min-score", type=float, default=0.3)
+    ap.add_argument("--landmarks", type=Path, help="dense face landmarks (default: next to the .h5)")
+    ap.add_argument("--coco-face", action="store_true", help="draw the COCO face keypoints, not the landmarks")
     ap.add_argument("--crf", type=int, default=32,
                     help="H.264 quality: lower = better/bigger (event frames compress poorly; 32 looks fine)")
     args = ap.parse_args()
@@ -85,13 +91,18 @@ def main() -> None:
     ev, w, h = f["events"], int(f.attrs["width"]), int(f.attrs["height"])
     dt_us = 1e6 / args.fps / float(f.attrs.get("timestamp_scale_ms", 0.001) * 1000)
 
-    kpts = None
+    kpts = lms = None
+    groups = GROUPS if args.all else {"face": GROUPS["face"]}
+    lm_file = args.landmarks or landmarks_path(args.events)
+    if not args.no_kpts and not args.coco_face and lm_file.exists():
+        lms, lm_valid = load_landmarks(lm_file, w, h)  # scaled to the event resolution
+        groups = {k: v for k, v in groups.items() if k != "face"}
+        print(f"face: {lm_file.name}")
     npz = args.npz or default_npz(args.events)
-    if npz and not args.no_kpts:
+    if npz and not args.no_kpts and groups:
         data = np.load(npz)
         kpts, valid = data["boxes_and_keypoints:keypoints"], data["boxes_and_keypoints:is_valid_box"]
         print(f"keypoints: {npz.name}")
-    groups = GROUPS if args.all else {"face": GROUPS["face"]}
 
     out = args.output or args.events.with_name(args.events.stem + "_render.mp4")
     writer = None
@@ -105,6 +116,8 @@ def main() -> None:
 
     n = 0
     for i, img in frames(ev, w, h, dt_us, args.max_frames):
+        if lms is not None and i < len(lms) and lm_valid[i]:
+            draw_landmarks(img, lms[i], GROUPS["face"][1], 1)
         if kpts is not None and i < len(kpts) and valid[i]:
             for idx, color in groups.values():
                 for x, y, s in kpts[i, list(idx)]:

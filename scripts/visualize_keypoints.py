@@ -2,6 +2,8 @@
 
 Keypoints follow the COCO-WholeBody 133-point layout, (x, y, score) in pixels:
   0-16 body, 17-22 feet, 23-90 face (68 pts), 91-111 left hand, 112-132 right hand.
+The face is drawn from <stem>_landmarks.npz (scripts/generate_landmarks.py) when it
+exists, else from the COCO face keypoints (--coco-face forces those).
 
 Usage:
   python scripts/visualize_keypoints.py path/to/V00_..._P0069.mp4 [--npz ann.npz] [-o out.mp4] [--all] [--show]
@@ -13,6 +15,8 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+
+from generate_landmarks import draw_landmarks, landmarks_path, load_landmarks
 
 FACE = range(23, 91)
 GROUPS = {
@@ -31,6 +35,8 @@ def main() -> None:
     p.add_argument("--all", action="store_true", help="draw body and hands too")
     p.add_argument("--show", action="store_true", help="show live window (q to quit)")
     p.add_argument("--min-score", type=float, default=0.3)
+    p.add_argument("--landmarks", type=Path, help="dense face landmarks (default: <video>_landmarks.npz)")
+    p.add_argument("--coco-face", action="store_true", help="draw the COCO face keypoints, not the landmarks")
     args = p.parse_args()
 
     data = np.load(args.npz or args.video.with_suffix(".npz"))
@@ -42,6 +48,12 @@ def main() -> None:
     cap = cv2.VideoCapture(str(args.video))
     fps = cap.get(cv2.CAP_PROP_FPS)
     w, h = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    lm_file = args.landmarks or landmarks_path(args.video)
+    lms = None
+    if not args.coco_face and lm_file.exists():
+        lms, lm_valid = load_landmarks(lm_file, w, h)
+        groups = {k: v for k, v in groups.items() if k != "face"}
+        print(f"face: {lm_file.name}")
     out_path = args.output or args.video.with_name(args.video.stem + "_kpts.mp4")
     writer = None
     if args.output or not args.show:
@@ -58,6 +70,8 @@ def main() -> None:
         ok, frame = cap.read()
         if not ok or i >= len(kpts):
             break
+        if lms is not None and i < len(lms) and lm_valid[i]:
+            draw_landmarks(frame, lms[i], GROUPS["face"][1], 1)
         if valid[i]:
             x0, y0, x1, y1 = boxes[i].astype(int)
             cv2.rectangle(frame, (x0, y0), (x1, y1), (200, 200, 200), 1)

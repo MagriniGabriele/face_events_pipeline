@@ -1,4 +1,4 @@
-"""Process one dataset archive: download -> face crop -> (events) -> delete raw.
+"""Process one dataset archive: download -> face crop -> (events) -> (landmarks) -> delete raw.
 
 Output goes to {out}/{label}/{split}/{batch:04d}/{archive:04d}/ with, per clip, the
 face crop (.mp4/.npz/.json from crop_faces.py) plus the ORIGINAL .npz/.json
@@ -8,6 +8,9 @@ every clip succeeded and the raw folder was deleted.
 Usage:
   python scripts/process_archive.py improvised dev 0 0 \\
       --raw ~/datasets/seamless_interaction_raw --out ~/datasets/seamless_interaction_faces
+
+`--landmarks` (env LANDMARKS=1) adds <id>_face<size>_landmarks.npz per crop as the last
+step (scripts/generate_landmarks.py; method from LANDMARKS_METHOD, default mediapipe).
 
 `--max-clips N` stops after N clips (smoke tests): the archive is then *not* marked
 `_DONE` and the raw folder is kept, so a later full run finishes it.
@@ -31,6 +34,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent))
 from crop_faces import crop_clip  # noqa: E402
+from landmarks_all import landmarks_for_all  # noqa: E402
 
 from seamless_interaction.fs import DatasetConfig, SeamlessInteractionFS  # noqa: E402
 
@@ -235,6 +239,8 @@ def main() -> None:
     p.add_argument("--size", type=int, default=640)
     p.add_argument("--events", action="store_true", default=bool(os.environ.get("EVENTS")),
                    help="also simulate events per crop (env EVENTS=1)")
+    p.add_argument("--landmarks", action="store_true", default=bool(os.environ.get("LANDMARKS")),
+                   help="also generate dense face landmarks per crop, as the last step (env LANDMARKS=1)")
     p.add_argument("--events-only", action="store_true",
                    help="only add missing events to an already-cropped output folder")
     p.add_argument("--max-clips", type=int, default=0, metavar="N",
@@ -299,6 +305,10 @@ def main() -> None:
     # events after every crop of this archive exists, so the whole pool stays busy
     if args.events and crops:
         failed += events_for_all(crops, out_dir)
+    if args.landmarks and crops:
+        method = os.environ.get("LANDMARKS_METHOD", "mediapipe")
+        say(f"{ts()} landmarks: {len(crops)} clips ({method})")
+        failed += landmarks_for_all(crops, method, log=lambda m: say(m, err=True))
     if failed:
         sys.exit(f"{len(failed)}/{len(videos)} clips failed; raw kept in {raw_dir}")
 

@@ -92,6 +92,11 @@ and saves 4.2× the disk (1.9 GB instead of 8 GB per clip).
 | `EVENTS_DEVICE` | `gpu` if available, else `cpu` | where eventcv simulates (`gpu` = compute shader via Vulkan; same events as CPU) |
 | `EVENTS_WORKERS` | `6` | clips simulated in parallel per archive (`1` = sequential). eventcv exposes no GPU index, so all workers share GPU 0 even on a multi-GPU box |
 | `EVENTS_PROGRESS_SECS` | `30` | seconds between per-clip progress bars in the log |
+| `LANDMARKS` | unset | `1` = dense face landmarks per crop, as the last step (see [Face landmarks](#face-landmarks)) |
+| `LANDMARKS_METHOD` | `mediapipe` | `mediapipe` (478 pts) or `fa` (face_alignment, 68 pts) |
+| `LANDMARKS_DEVICE` | mediapipe: `cpu`, fa: `gpu` if available | `cpu` or `gpu`; for mediapipe, CPU workers are faster over many clips and leave the GPU to eventcv |
+| `LANDMARKS_WORKERS` | half the cores, max 8 (`fa`: 1) | clips processed in parallel for landmarks |
+| `LANDMARK_MODEL` | `landmark_models/face_landmarker.task` | MediaPipe model (downloaded by `setup.sh`) |
 | `MIN_FREE_GB` | `20` | abort when free disk space is below this |
 | `SI_REPO` | `seamless_interaction` | path to the Meta repo clone |
 | `FEP_PYTHON` | `python` on PATH | interpreter to use (the active env by default) |
@@ -111,6 +116,7 @@ archive and the anonymous rate limit. For a long run, `export HF_TOKEN=hf_...` f
 | `<id>_face640.json` | crop position `crop_xywh` in the original frame, face extent, event stats |
 | `<id>_face640_events.h5` | events: `events/{t (µs), x, y, p}`, attrs `width`, `height` |
 | `<id>_face640_events_kpts.npz` | only with `EVENTS_SCALE`: keypoints at the event resolution |
+| `<id>_face640_landmarks.npz` | only with `LANDMARKS=1` or `landmarks_all.py`: dense face landmarks in crop pixels |
 | `<id>.npz`, `<id>.json` | original annotations (movement, SMPL-H, keypoints; transcript, VAD) |
 | `_DONE` | archive finished (lists skipped clips, e.g. no detected face) |
 
@@ -121,6 +127,26 @@ the crop's coordinates, so `<id>_face640.npz` applies to them directly.
 Keypoints are COCO-WholeBody (133 × (x, y, score)): 0–16 body, 17–22 feet, **23–90 face
 (68)**, 91–111 left hand, 112–132 right hand. They are snapped to a coarse ~15 px grid
 (whole-body heatmap), so face landmarks are approximate.
+
+## Face landmarks
+
+`scripts/generate_landmarks.py` writes `<id>_face640_landmarks.npz` (annotations only):
+`landmarks` (T, N, 2) in crop pixels (NaN without a face), `valid` (T,), `width`, `height`,
+`fps`, `method`; with MediaPipe also `z`, `blendshapes` (T, 52) + `blendshape_names`, and
+`transform` (T, 4, 4, head pose). Two methods: `mediapipe` (default, 478 points tracked
+across frames, ~130–150 fps per clip on CPU, ~215 with `--device gpu`) or `fa`
+(face_alignment, 68 iBUG points, GPU).
+
+```bash
+LANDMARKS=1 EVENTS=1 scripts/pipeline.sh ...               # as the last step of every archive
+python scripts/landmarks_all.py [OUT_DIR] [--done-only]    # for all crops already downloaded (resumable)
+python scripts/generate_landmarks.py OUT/.../<id>_face640.mp4 [--method fa]   # one clip
+```
+
+`--done-only` skips archives still being written, so `landmarks_all.py` can run alongside
+the pipeline. When the file exists, the scripts below draw these landmarks instead of the
+coarse COCO face keypoints (rescaled to the event resolution with `EVENTS_SCALE`);
+`--coco-face` brings the old ones back.
 
 ## Inspecting results
 
@@ -142,5 +168,7 @@ python scripts/overlay_events.py OUT/.../<id>_face640.mp4 [--mode side] [--max-f
 - `scripts/crop_faces.py`: face crop for a clip or a folder (also usable on its own)
 - `scripts/visualize_keypoints.py`: draw keypoints on a video
 - `scripts/overlay_events.py`: events (via `eventcv render`) over the RGB crop + face keypoints, or side by side (`--mode side`)
+- `scripts/generate_landmarks.py`: dense face landmarks for a clip (MediaPipe or face_alignment)
+- `scripts/landmarks_all.py`: landmarks for every crop in a dataset folder (parallel, resumable)
 - `scripts/render_events.py`: render an events .h5 to .mp4 with keypoints overlaid (streams, works on full clips)
 - `video_to_events/run.sh`: reference EventCV settings (noise off, 8× upsampling), CLI/CPU only; the pipeline uses the same settings through the Python API

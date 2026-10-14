@@ -10,3 +10,6 @@ __pycache__/
 # datasets and outputs
 si_*_raw/
 si_*_out/
+
+# downloaded by setup.sh
+landmark_models/

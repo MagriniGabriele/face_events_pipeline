@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Resumable pipeline: for each archive in assets/filelist.csv, download -> face crop -> cleanup.
+# Resumable pipeline: for each archive in assets/filelist.csv, download -> face crop -> (events) -> (landmarks) -> cleanup.
 # Usage: setsid nohup scripts/pipeline.sh [--label L] [--split S] [--batches 0-99] [--limit N] > /dev/null 2>&1 &
 #   --batches:   dataset batch indices, e.g. "3", "0-99", "0,5,10-12" (default: all)
 #   --limit:     max number of ARCHIVES (~1 GB, 4-19 clips each) to process in this run
 #   --max-clips: max clips per archive (smoke test); such an archive is left unfinished
-# Env: SI_REPO, FEP_PYTHON, MAX_CONSEC_FAIL (default 3), RAW_DIR, OUT_DIR, CROP_SIZE, EVENTS=1 (simulate events), EVENTS_DEVICE=gpu|cpu, EVENTS_SCALE="W H", EVENTS_MAX_FRAMES, MIN_FREE_GB
+# Env: SI_REPO, FEP_PYTHON, MAX_CONSEC_FAIL (default 3), RAW_DIR, OUT_DIR, CROP_SIZE, EVENTS=1 (simulate events), EVENTS_DEVICE=gpu|cpu, EVENTS_SCALE="W H", EVENTS_MAX_FRAMES, MIN_FREE_GB,
+#      LANDMARKS=1 (dense face landmarks per crop, last step), LANDMARKS_METHOD=mediapipe|fa, LANDMARK_MODEL, LANDMARKS_WORKERS, LANDMARKS_DEVICE=cpu|gpu
 set -u
 cd "$(dirname "$0")/.."
 SI_REPO="${SI_REPO:-seamless_interaction}"  # clone of facebookresearch/seamless_interaction
@@ -41,6 +42,15 @@ command -v ffmpeg > /dev/null || die "ffmpeg not found on PATH"
 if [ -n "${EVENTS:-}" ]; then
   "${EVENTCV:-eventcv}" simulate --help > /dev/null 2>&1 || die "eventcv not found (EVENTS=1); set EVENTCV or activate the env"
 fi
+if [ -n "${LANDMARKS:-}" ]; then
+  if [ "${LANDMARKS_METHOD:-mediapipe}" = fa ]; then
+    "$PYTHON" -c "import face_alignment" 2>/dev/null || die "face_alignment not importable (LANDMARKS_METHOD=fa): pip install face-alignment"
+  else
+    "$PYTHON" -c "import mediapipe" 2>/dev/null || die "mediapipe not importable (LANDMARKS=1): run setup.sh"
+    model="${LANDMARK_MODEL:-landmark_models/face_landmarker.task}"
+    [ -f "$model" ] || die "$model not found (LANDMARKS=1): run setup.sh, or set LANDMARK_MODEL"
+  fi
+fi
 
 # unique archives: label split batch archive
 list=$("$PYTHON" -I - "$SI_REPO/assets/filelist.csv" "$LABEL" "$SPLIT" "$BATCHES" <<'PY'
@@ -75,6 +85,7 @@ while read -r label split batch archive; do
   log "begin $name"; t0=$SECONDS
   extra=()
   [ -n "${EVENTS:-}" ] && extra+=(--events)
+  [ -n "${LANDMARKS:-}" ] && extra+=(--landmarks)
   [ "$MAX_CLIPS" -gt 0 ] && extra+=(--max-clips "$MAX_CLIPS")
   # -u: unbuffered, else the worker's per-clip progress sits in its stdout buffer
   # (invisible in $LOG) until the whole archive is done, which looks like a hang

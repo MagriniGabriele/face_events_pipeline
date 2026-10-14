@@ -8,3 +8,6 @@ dependencies:
   - pip:
       - eventcv==1.0.7   # event simulator (version validated with video_to_events/run.sh)
       - h5py             # optional: read the .h5 event files
+      - mediapipe==1.1.0 # dense face landmarks (scripts/generate_landmarks.py); model fetched by setup.sh
+      - torch==2.14.1    # for face_alignment (Linux wheel bundles CUDA)
+      - face-alignment==1.5.0  # 68-point landmarks: generate_landmarks.py --method fa

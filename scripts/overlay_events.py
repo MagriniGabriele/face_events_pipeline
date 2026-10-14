@@ -1,5 +1,9 @@
 """Overlay events (rendered by `eventcv render`) on the RGB face crop, plus face keypoints.
 
+The face points come from <id>_face640_landmarks.npz (scripts/generate_landmarks.py)
+when it exists, else from the COCO face keypoints in <id>_face640.npz (--coco-face
+forces those).
+
 Give any file of a clip (<id>_face640.mp4, .npz or _events.h5); the others are found
 next to it. Writes <id>_face640_overlay.mp4.
 
@@ -20,6 +24,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from generate_landmarks import draw_landmarks, landmarks_path, load_landmarks
+
 FACE = range(23, 91)
 
 
@@ -28,10 +34,12 @@ def main() -> None:
     ap.add_argument("clip", type=Path, help="<id>_face640.mp4 / .npz / _events.h5")
     ap.add_argument("-o", "--output", type=Path)
     ap.add_argument("--mode", choices=["overlay", "side"], default="overlay")
-    ap.add_argument("--dim", type=float, default=0.45, help="RGB brightness under the events (overlay)")
+    ap.add_argument("--dim", type=float, default=0.75, help="RGB brightness under the events (overlay)")
     ap.add_argument("--no-kpts", action="store_true")
+    ap.add_argument("--landmarks", type=Path, help="dense face landmarks (default: next to the clip)")
+    ap.add_argument("--coco-face", action="store_true", help="draw the COCO face keypoints, not the landmarks")
     ap.add_argument("--max-frames", type=int)
-    ap.add_argument("--crf", type=int, default=28)
+    ap.add_argument("--crf", type=int, default=1)
     args = ap.parse_args()
 
     stem = args.clip.name.removesuffix("_events.h5").removesuffix(".mp4").removesuffix(".npz")
@@ -61,8 +69,12 @@ def main() -> None:
     print(f"      done in {time.time() - t0:.0f}s", flush=True)
     evcap = cv2.VideoCapture(str(ev_mp4))
 
-    kpts = None
-    if not args.no_kpts and npz.exists():
+    kpts = lms = None
+    lm_file = args.landmarks or landmarks_path(rgb)
+    if not args.no_kpts and not args.coco_face and lm_file.exists():
+        lms, lm_valid = load_landmarks(lm_file, w, h)
+        print(f"face: {lm_file.name}")
+    elif not args.no_kpts and npz.exists():
         data = np.load(npz)
         kpts, valid = data["boxes_and_keypoints:keypoints"], data["boxes_and_keypoints:is_valid_box"]
 
@@ -95,7 +107,10 @@ def main() -> None:
             panels = [img]
         else:
             panels = [frame, ev]
-        if kpts is not None and i < len(kpts) and valid[i]:
+        if lms is not None and i < len(lms) and lm_valid[i]:
+            for p in panels:
+                draw_landmarks(p, lms[i], (0, 255, 0), 1)
+        elif kpts is not None and i < len(kpts) and valid[i]:
             for p in panels:
                 for x, y, s in kpts[i, list(FACE)]:
                     if s >= 0.3:
