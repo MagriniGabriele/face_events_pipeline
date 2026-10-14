@@ -57,13 +57,13 @@ def crop_clip(video: Path, out_dir: Path, size: int, margin: float = 0.1,
     """Crop one clip; returns the output mp4 path, or None if skipped (no npz / no face)."""
     npz = video.with_suffix(".npz")
     if not npz.exists():
-        print(f"skip {video.name}: no .npz")
+        print(f"skip {video.name}: no .npz", flush=True)
         return None
     w, h = probe(video)
     data = np.load(npz)
     box = face_crop_box(data, w, h, size, margin, min_score)
     if box is None:
-        print(f"skip {video.name}: no valid face keypoints")
+        print(f"skip {video.name}: no valid face keypoints", flush=True)
         return None
     left, top, needed, valid_frac = box
     out = out_dir / f"{video.stem}_face{size}.mp4"
@@ -89,7 +89,7 @@ def crop_clip(video: Path, out_dir: Path, size: int, margin: float = 0.1,
             "face_extent": needed, "fits": fits, "valid_frac": round(valid_frac, 3)}
     out.with_suffix(".json").write_text(json.dumps(meta, indent=2))
     warn = "" if fits else "  WARNING: face extent exceeds crop"
-    print(f"{video.stem}: face extent {needed}px, crop {size}x{size} at ({left},{top}){warn}")
+    print(f"  face extent {needed}px, crop {size}x{size} at ({left},{top}){warn}", flush=True)
     return out
 
 
@@ -106,7 +106,8 @@ def main() -> None:
     videos = [args.input] if args.input.is_file() else sorted(args.input.rglob("*.mp4"))
     args.output.mkdir(parents=True, exist_ok=True)
 
-    for video in videos:
+    for i, video in enumerate(videos, 1):
+        print(f"[{i}/{len(videos)}] {video.stem}", flush=True)
         crop_clip(video, args.output, args.size, args.margin, args.min_score, args.crf)
 
 

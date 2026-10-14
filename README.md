@@ -19,15 +19,29 @@ conda activate face_events
 The env (`environment.yml`) has Python 3.12, ffmpeg (libx264), `eventcv==1.0.7`, h5py, and
 the Meta repo installed in editable mode (its `assets/filelist.csv` lists every archive).
 
-## Quick test (one archive, short events)
+## Quick test (two clips, short events)
 
 ```bash
 RAW_DIR=~/si_test_raw OUT_DIR=~/si_test_out EVENTS=1 EVENTS_MAX_FRAMES=150 \
-  scripts/pipeline.sh --label naturalistic --split dev --batches 0 --limit 1
-tail ~/si_test_out/pipeline.log
+  scripts/pipeline.sh --label naturalistic --split dev --batches 0 --limit 1 --max-clips 2
+tail -f ~/si_test_out/pipeline.log      # progress appears per clip, live
 ```
 
-`EVENTS_MAX_FRAMES=150` limits events to the first 5 s of each clip (testing only).
+`EVENTS_MAX_FRAMES=150` limits events to the first 5 s of each clip, `--max-clips 2` to
+the first 2 clips of the archive (testing only). An archive processed with `--max-clips`
+is deliberately left unfinished — no `_DONE`, raw files kept — so a later full run
+completes it.
+
+Everything the worker prints goes to `$OUT_DIR/pipeline.log`, not to the terminal: a clip
+takes ~6 s to crop and ~3 min to simulate events, so watch the log with `tail -f`
+rather than the terminal, which stays silent between archives. Each clip being simulated
+reports its own completion bar every `EVENTS_PROGRESS_SECS` (default 30):
+
+```
+18:05:38   V00_S0644_..._face640 [##------------]  12% 113/900 frames, 8.6M events
+18:05:38   V00_S0692_..._face640 [##------------]  12% 115/900 frames, 8.8M events
+18:06:14   events V00_S0644_..._events.h5: 247.7 MB in 41.3s
+```
 
 ## Full run
 
@@ -45,15 +59,25 @@ scripts/pipeline.sh --label improvised --split dev --batches 0,1          # list
 
 A *batch* is a dataset folder of ~40–50 archives (~50–100 GB); the pipeline still downloads
 and processes **one archive (~1 GB) at a time** inside it, so disk use stays small. Without
-filters it processes everything. `--limit N` additionally caps the number of archives per run
-(handy for tests). The output keeps the dataset layout: `$OUT_DIR/{label}/{split}/{batch}/{archive}/`.
+filters it processes everything. `--limit N` caps the number of **archives** per run — not
+clips: an archive holds 4–19 clips of ~3 min each, so `--limit 2` is ~20 clips. Use
+`--max-clips N` to cap the clips *within* each archive (smoke tests). The output keeps the
+dataset layout: `$OUT_DIR/{label}/{split}/{batch}/{archive}/`.
 Stop with `pkill -f pipeline.sh`; rerun to resume. Failed archives are listed in
 `$OUT_DIR/failed.txt` (their raw files are kept for inspection).
 
-**Budget before a full run:** about 21k archives / 129k clips (~20 TB download). Per archive:
-~5–7 min download + crop, and ~15 min / ~6 GB for full-length 640×640 events. Events for the
-whole dataset at these settings are on the order of 100+ TB, so use `--label/--split/--limit`
-or `EVENTS_SCALE` to fit your disk. The run stops when free space drops below `MIN_FREE_GB`.
+**Budget before a full run:** about 21k archives / 129k clips (~20 TB download). Measured on
+one RTX 4090, per 3 min 1080×1920 clip: ~6 s to crop, and ~3 min / ~1.9 GB for full-length
+640×640 events (~27 fps, ~600M events) on a single worker. Clips of an archive are simulated
+`EVENTS_WORKERS` at a time, which nearly triples throughput (a single clip leaves the GPU
+~46% idle): 31 fps for one worker, 87 for six, 91 for eight. Per archive that is ~2.5 min
+without events and **~13–15 min / ~20–25 GB with them**. Events for the whole dataset at
+these settings are on the order of 200 TB, so use `--label/--split/--limit/--max-clips` or
+`EVENTS_SCALE` to fit your disk. The run stops when free space drops below `MIN_FREE_GB`
+— checked *before* each archive, so keep it above the ~25 GB one archive can write.
+
+The `.h5` keeps eventcv's default gzip-1: with a full worker pool it costs ~12% throughput
+and saves 4.2× the disk (1.9 GB instead of 8 GB per clip).
 
 ### Settings (environment variables)
 
@@ -66,9 +90,15 @@ or `EVENTS_SCALE` to fit your disk. The run stops when free space drops below `M
 | `EVENTS_SCALE` | unset | `"W H"`: events at this resolution; keypoints are remapped |
 | `EVENTS_MAX_FRAMES` | unset | testing only: cap frames per clip |
 | `EVENTS_DEVICE` | `gpu` if available, else `cpu` | where eventcv simulates (`gpu` = compute shader via Vulkan; same events as CPU) |
+| `EVENTS_WORKERS` | `6` | clips simulated in parallel per archive (`1` = sequential). eventcv exposes no GPU index, so all workers share GPU 0 even on a multi-GPU box |
+| `EVENTS_PROGRESS_SECS` | `30` | seconds between per-clip progress bars in the log |
 | `MIN_FREE_GB` | `20` | abort when free disk space is below this |
 | `SI_REPO` | `seamless_interaction` | path to the Meta repo clone |
 | `FEP_PYTHON` | `python` on PATH | interpreter to use (the active env by default) |
+| `HF_TOKEN` | unset | optional: a [HF access token](https://huggingface.co/settings/tokens) lifts the anonymous rate limit and speeds up downloads |
+
+Downloads work without `HF_TOKEN` (the dataset is public) — you just get a warning per
+archive and the anonymous rate limit. For a long run, `export HF_TOKEN=hf_...` first.
 
 ## Output
 

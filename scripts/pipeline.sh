@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Resumable pipeline: for each archive in assets/filelist.csv, download -> face crop -> cleanup.
 # Usage: setsid nohup scripts/pipeline.sh [--label L] [--split S] [--batches 0-99] [--limit N] > /dev/null 2>&1 &
-#   --batches: dataset batch indices, e.g. "3", "0-99", "0,5,10-12" (default: all)
-#   --limit:   max number of archives to process in this run
+#   --batches:   dataset batch indices, e.g. "3", "0-99", "0,5,10-12" (default: all)
+#   --limit:     max number of ARCHIVES (~1 GB, 4-19 clips each) to process in this run
+#   --max-clips: max clips per archive (smoke test); such an archive is left unfinished
 # Env: SI_REPO, FEP_PYTHON, MAX_CONSEC_FAIL (default 3), RAW_DIR, OUT_DIR, CROP_SIZE, EVENTS=1 (simulate events), EVENTS_DEVICE=gpu|cpu, EVENTS_SCALE="W H", EVENTS_MAX_FRAMES, MIN_FREE_GB
 set -u
 cd "$(dirname "$0")/.."
@@ -14,13 +15,14 @@ RAW_DIR="${RAW_DIR:-$HOME/datasets/seamless_interaction_raw}"
 OUT_DIR="${OUT_DIR:-$HOME/datasets/seamless_interaction_faces}"
 CROP_SIZE="${CROP_SIZE:-640}"
 MIN_FREE_GB="${MIN_FREE_GB:-20}"
-LABEL=""; SPLIT=""; BATCHES=""; LIMIT=0
+LABEL=""; SPLIT=""; BATCHES=""; LIMIT=0; MAX_CLIPS=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --label) LABEL="$2"; shift 2;;
     --split) SPLIT="$2"; shift 2;;
     --batches) BATCHES="$2"; shift 2;;
     --limit) LIMIT="$2"; shift 2;;
+    --max-clips) MAX_CLIPS="$2"; shift 2;;
     *) echo "unknown arg $1" >&2; exit 2;;
   esac
 done
@@ -56,7 +58,8 @@ for a in sorted(s): print(*a)
 PY
 )
 [ -n "$list" ] || die "no archives match label=${LABEL:-all} split=${SPLIT:-all} batches=${BATCHES:-all}"
-log "start: $(echo "$list" | wc -l) archives (label=${LABEL:-all} split=${SPLIT:-all} batches=${BATCHES:-all} limit=$LIMIT)"
+log "start: $(echo "$list" | wc -l) archives (label=${LABEL:-all} split=${SPLIT:-all} batches=${BATCHES:-all} limit=$LIMIT max_clips=$MAX_CLIPS)"
+[ "$MAX_CLIPS" -gt 0 ] && log "note: --max-clips $MAX_CLIPS leaves every archive unfinished (no _DONE), so a rerun redoes it"
 
 n=0; consec=0
 while read -r label split batch archive; do
@@ -71,10 +74,14 @@ while read -r label split batch archive; do
   fi
   log "begin $name"; t0=$SECONDS
   extra=()
-  [ -n "${EVENTS:-}" ] && extra=(--events)
-  if "$PYTHON" scripts/process_archive.py "$label" "$split" "$batch" "$archive" \
+  [ -n "${EVENTS:-}" ] && extra+=(--events)
+  [ "$MAX_CLIPS" -gt 0 ] && extra+=(--max-clips "$MAX_CLIPS")
+  # -u: unbuffered, else the worker's per-clip progress sits in its stdout buffer
+  # (invisible in $LOG) until the whole archive is done, which looks like a hang
+  if "$PYTHON" -u scripts/process_archive.py "$label" "$split" "$batch" "$archive" \
       --raw "$RAW_DIR" --out "$OUT_DIR" --size "$CROP_SIZE" ${extra[@]+"${extra[@]}"} < /dev/null >> "$LOG" 2>&1; then
-    log "ok $name ($((SECONDS - t0))s)"; consec=0
+    [ "$MAX_CLIPS" -gt 0 ] && suffix=", partial" || suffix=""
+    log "ok $name ($((SECONDS - t0))s$suffix)"; consec=0
   else
     log "FAILED $name ($((SECONDS - t0))s), last log lines:"
     grep -v ' - INFO - ' "$LOG" | tail -6 | grep -v "begin $name" | sed 's/^/    /'

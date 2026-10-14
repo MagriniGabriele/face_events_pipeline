@@ -1,0 +1,145 @@
+2026-10-12 14:22:12,565 - INFO - Loaded filelist with 129370 entries
+2026-10-12 14:22:12,565 - INFO - Downloading naturalistic/train/0000/0000.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000.tar
+2026-10-12 14:22:12,862 - INFO - HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+2026-10-12 14:22:13,009 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/train/0000/0000.tar "HTTP/1.1 302 Found"
+2026-10-12 14:22:13,009 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 14:22:13,154 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 14:23:24,056 - INFO - Extracting /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000
+2026-10-12 14:24:37,764 - INFO - Loaded filelist with 129370 entries
+2026-10-12 14:24:37,764 - INFO - Downloading naturalistic/train/0000/0001.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0001.tar
+2026-10-12 14:24:38,097 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/train/0000/0001.tar "HTTP/1.1 302 Found"
+2026-10-12 14:24:38,097 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 14:24:38,245 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 14:25:48,598 - INFO - Extracting /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0001.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0001
+2026-10-12 14:32:26,527 - INFO - Loaded filelist with 129370 entries
+2026-10-12 14:32:26,527 - INFO - Downloading naturalistic/train/0000/0000.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000.tar
+2026-10-12 14:32:26,757 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/train/0000/0000.tar "HTTP/1.1 302 Found"
+2026-10-12 14:32:26,758 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 14:32:26,902 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 14:33:36,450 - INFO - Extracting /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000
+2026-10-12 14:44:02,578 - INFO - Loaded filelist with 129370 entries
+2026-10-12 14:44:02,578 - INFO - Downloading naturalistic/train/0000/0000.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000.tar
+2026-10-12 14:44:02,884 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/train/0000/0000.tar "HTTP/1.1 302 Found"
+2026-10-12 14:44:02,885 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 14:44:03,032 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 14:45:12,877 - INFO - Extracting /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000
+2026-10-12 15:02:18,740 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:02:18,740 - INFO - Downloading improvised/dev/0000/0000.tar to /tmp/si_dbg_raw/improvised/dev/0000/0000.tar
+2026-10-12 15:02:19,034 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0000.tar "HTTP/1.1 302 Found"
+2026-10-12 15:02:19,179 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:03:28,136 - INFO - Extracting /tmp/si_dbg_raw/improvised/dev/0000/0000.tar to /tmp/si_dbg_raw/improvised/dev/0000/0000
+2026-10-12 15:04:42,418 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:04:42,418 - INFO - Downloading improvised/dev/0000/0001.tar to /tmp/si_dbg_raw/improvised/dev/0000/0001.tar
+2026-10-12 15:04:42,749 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0001.tar "HTTP/1.1 302 Found"
+2026-10-12 15:04:42,750 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 15:04:42,889 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:05:55,318 - INFO - Extracting /tmp/si_dbg_raw/improvised/dev/0000/0001.tar to /tmp/si_dbg_raw/improvised/dev/0000/0001
+2026-10-12 15:24:19,442 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:24:19,442 - INFO - Downloading improvised/dev/0000/0000.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0000.tar
+2026-10-12 15:24:19,679 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0000.tar "HTTP/1.1 302 Found"
+2026-10-12 15:24:19,679 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 15:24:19,826 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:25:26,946 - INFO - Extracting /tmp/si_dbg2_raw/improvised/dev/0000/0000.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0000
+2026-10-12 15:30:08,052 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:30:08,052 - INFO - Downloading improvised/dev/0000/0000.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0000.tar
+2026-10-12 15:30:08,341 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0000.tar "HTTP/1.1 302 Found"
+2026-10-12 15:30:08,342 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 15:30:08,488 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:31:15,011 - INFO - Archive already extracted: /tmp/si_dbg2_raw/improvised/dev/0000/0000
+2026-10-12 15:37:59,133 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:37:59,133 - INFO - Downloading improvised/dev/0000/0001.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0001.tar
+2026-10-12 15:37:59,437 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0001.tar "HTTP/1.1 302 Found"
+2026-10-12 15:37:59,438 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 15:37:59,583 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:43:52,266 - INFO - Extracting /tmp/si_dbg2_raw/improvised/dev/0000/0001.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0001
+2026-10-12 15:45:15,695 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:45:15,695 - INFO - Downloading improvised/dev/0000/0002.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0002.tar
+2026-10-12 15:45:15,979 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0002.tar "HTTP/1.1 302 Found"
+2026-10-12 15:45:16,126 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:46:31,488 - INFO - Extracting /tmp/si_dbg2_raw/improvised/dev/0000/0002.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0002
+2026-10-12 15:47:55,021 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:47:55,021 - INFO - Downloading improvised/dev/0000/0003.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0003.tar
+2026-10-12 15:47:55,357 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0003.tar "HTTP/1.1 302 Found"
+2026-10-12 15:47:55,358 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 15:47:55,503 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:49:12,932 - INFO - Extracting /tmp/si_dbg2_raw/improvised/dev/0000/0003.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0003
+2026-10-12 15:50:09,148 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:50:09,148 - INFO - Downloading improvised/dev/0000/0004.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0004.tar
+2026-10-12 15:50:09,435 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0004.tar "HTTP/1.1 302 Found"
+2026-10-12 15:50:09,435 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 15:50:09,582 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:51:30,043 - INFO - Extracting /tmp/si_dbg2_raw/improvised/dev/0000/0004.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0004
+2026-10-12 15:52:39,280 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:52:39,280 - INFO - Downloading improvised/dev/0000/0005.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0005.tar
+2026-10-12 15:52:39,580 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0005.tar "HTTP/1.1 302 Found"
+2026-10-12 15:52:39,580 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 15:52:39,725 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:53:59,529 - INFO - Extracting /tmp/si_dbg2_raw/improvised/dev/0000/0005.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0005
+2026-10-12 15:55:19,891 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:55:19,891 - INFO - Downloading improvised/dev/0000/0006.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0006.tar
+2026-10-12 15:55:20,222 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0006.tar "HTTP/1.1 302 Found"
+2026-10-12 15:55:20,222 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 15:55:20,367 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:56:30,980 - INFO - Extracting /tmp/si_dbg2_raw/improvised/dev/0000/0006.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0006
+2026-10-12 15:57:48,394 - INFO - Loaded filelist with 129370 entries
+2026-10-12 15:57:48,394 - INFO - Downloading improvised/dev/0000/0007.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0007.tar
+2026-10-12 15:57:48,722 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0007.tar "HTTP/1.1 302 Found"
+2026-10-12 15:57:48,722 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 15:57:48,866 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 15:59:05,255 - INFO - Extracting /tmp/si_dbg2_raw/improvised/dev/0000/0007.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0007
+2026-10-12 16:00:23,714 - INFO - Loaded filelist with 129370 entries
+2026-10-12 16:00:23,714 - INFO - Downloading improvised/dev/0000/0008.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0008.tar
+2026-10-12 16:00:24,024 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0008.tar "HTTP/1.1 302 Found"
+2026-10-12 16:00:24,025 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 16:00:24,171 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 16:02:01,059 - INFO - Extracting /tmp/si_dbg2_raw/improvised/dev/0000/0008.tar to /tmp/si_dbg2_raw/improvised/dev/0000/0008
+2026-10-12 16:03:20,672 - INFO - Loaded filelist with 129370 entries
+2026-10-12 16:03:20,673 - INFO - Downloading improvised/dev/0000/0000.tar to /tmp/si_v_raw/improvised/dev/0000/0000.tar
+2026-10-12 16:03:21,018 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0000.tar "HTTP/1.1 302 Found"
+2026-10-12 16:03:21,164 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 16:04:27,541 - INFO - Extracting /tmp/si_v_raw/improvised/dev/0000/0000.tar to /tmp/si_v_raw/improvised/dev/0000/0000
+2026-10-12 16:16:58,742 - INFO - Loaded filelist with 129370 entries
+2026-10-12 16:16:58,742 - INFO - Downloading naturalistic/train/0000/0000.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000.tar
+2026-10-12 16:16:59,050 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/train/0000/0000.tar "HTTP/1.1 302 Found"
+2026-10-12 16:16:59,050 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 16:16:59,197 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 16:18:08,908 - INFO - Extracting /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0000
+2026-10-12 16:23:42,224 - INFO - Loaded filelist with 129370 entries
+2026-10-12 16:23:42,224 - INFO - Downloading improvised/dev/0000/0000.tar to /tmp/bench_raw/improvised/dev/0000/0000.tar
+2026-10-12 16:23:42,773 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/improvised/dev/0000/0000.tar "HTTP/1.1 302 Found"
+2026-10-12 16:23:42,920 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 16:27:47,784 - INFO - Loaded filelist with 129370 entries
+2026-10-12 16:27:47,784 - INFO - Downloading naturalistic/train/0000/0001.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0001.tar
+2026-10-12 16:27:48,086 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/train/0000/0001.tar "HTTP/1.1 302 Found"
+2026-10-12 16:27:48,237 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 16:28:58,692 - INFO - Extracting /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0001.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0001
+2026-10-12 16:37:49,197 - INFO - Loaded filelist with 129370 entries
+2026-10-12 16:37:49,197 - INFO - Downloading naturalistic/train/0000/0002.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0002.tar
+2026-10-12 16:37:49,489 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/train/0000/0002.tar "HTTP/1.1 302 Found"
+2026-10-12 16:37:49,490 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 16:37:49,642 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 16:39:03,632 - INFO - Extracting /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0002.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0002
+2026-10-12 16:43:15,673 - INFO - Loaded filelist with 129370 entries
+2026-10-12 16:43:15,674 - INFO - Downloading naturalistic/train/0000/0003.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0003.tar
+2026-10-12 16:43:15,993 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/train/0000/0003.tar "HTTP/1.1 302 Found"
+2026-10-12 16:43:15,993 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 16:43:16,139 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 16:44:23,470 - INFO - Extracting /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0003.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0003
+2026-10-12 16:50:32,492 - INFO - Loaded filelist with 129370 entries
+2026-10-12 16:50:32,492 - INFO - Downloading naturalistic/train/0000/0004.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0004.tar
+2026-10-12 16:50:32,798 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/train/0000/0004.tar "HTTP/1.1 302 Found"
+2026-10-12 16:50:32,798 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 16:50:32,944 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 16:51:41,558 - INFO - Extracting /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0004.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0004
+2026-10-12 16:58:22,127 - INFO - Loaded filelist with 129370 entries
+2026-10-12 16:58:22,127 - INFO - Downloading naturalistic/train/0000/0005.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0005.tar
+2026-10-12 16:58:22,410 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/train/0000/0005.tar "HTTP/1.1 302 Found"
+2026-10-12 16:58:22,411 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 16:58:22,555 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 16:59:30,034 - INFO - Extracting /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0005.tar to /home/gmagrini/datasets/seamless_interaction_raw/naturalistic/train/0000/0005
+2026-10-12 18:27:39,421 - INFO - Loaded filelist with 129370 entries
+2026-10-12 18:27:39,422 - INFO - Downloading naturalistic/dev/0000/0000.tar to /home/gmagrini/si_demo_raw/naturalistic/dev/0000/0000.tar
+2026-10-12 18:27:39,755 - INFO - HTTP Request: HEAD https://huggingface.co/datasets/facebook/seamless-interaction/resolve/main/naturalistic/dev/0000/0000.tar "HTTP/1.1 302 Found"
+2026-10-12 18:27:39,756 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-12 18:27:39,908 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/facebook/seamless-interaction/xet-read-token/ba9e212ab927ba05bfd80778f53bf9de69f65e3b "HTTP/1.1 200 OK"
+2026-10-12 18:28:46,180 - INFO - Extracting /home/gmagrini/si_demo_raw/naturalistic/dev/0000/0000.tar to /home/gmagrini/si_demo_raw/naturalistic/dev/0000/0000
