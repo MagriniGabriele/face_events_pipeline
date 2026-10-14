@@ -39,10 +39,10 @@ MAX_CONSEC_FAIL="${MAX_CONSEC_FAIL:-3}"
   || die "'$PYTHON' cannot import seamless_interaction: $("$PYTHON" -I -c 'import seamless_interaction.fs' 2>&1 | tail -1)"
 log "python: $PYTHON ($("$PYTHON" -c 'import numpy, sys; print(sys.version.split()[0], "numpy", numpy.__version__)'))"
 command -v ffmpeg > /dev/null || die "ffmpeg not found on PATH"
-if [ -n "${EVENTS:-}" ]; then
+if [ -n "${EVENTS:-1}" ]; then
   "${EVENTCV:-eventcv}" simulate --help > /dev/null 2>&1 || die "eventcv not found (EVENTS=1); set EVENTCV or activate the env"
 fi
-if [ -n "${LANDMARKS:-}" ]; then
+if [ -n "${LANDMARKS:-1}" ]; then
   if [ "${LANDMARKS_METHOD:-mediapipe}" = fa ]; then
     "$PYTHON" -c "import face_alignment" 2>/dev/null || die "face_alignment not importable (LANDMARKS_METHOD=fa): pip install face-alignment"
   else
@@ -84,8 +84,8 @@ while read -r label split batch archive; do
   fi
   log "begin $name"; t0=$SECONDS
   extra=()
-  [ -n "${EVENTS:-}" ] && extra+=(--events)
-  [ -n "${LANDMARKS:-}" ] && extra+=(--landmarks)
+  [ -n "${EVENTS:-1}" ] && extra+=(--events)
+  [ -n "${LANDMARKS:-1}" ] && extra+=(--landmarks)
   [ "$MAX_CLIPS" -gt 0 ] && extra+=(--max-clips "$MAX_CLIPS")
   # -u: unbuffered, else the worker's per-clip progress sits in its stdout buffer
   # (invisible in $LOG) until the whole archive is done, which looks like a hang
