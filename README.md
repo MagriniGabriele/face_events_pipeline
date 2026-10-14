@@ -86,13 +86,13 @@ and saves 4.2× the disk (1.9 GB instead of 8 GB per clip).
 | `OUT_DIR` | `~/datasets/seamless_interaction_faces` | kept outputs |
 | `RAW_DIR` | `~/datasets/seamless_interaction_raw` | temporary downloads (deleted per archive) |
 | `CROP_SIZE` | `640` | crop side in original pixels (no resizing) |
-| `EVENTS` | unset | `1` = simulate events |
+| `EVENTS` | `1` | `1` = simulate events |
 | `EVENTS_SCALE` | unset | `"W H"`: events at this resolution; keypoints are remapped |
 | `EVENTS_MAX_FRAMES` | unset | testing only: cap frames per clip |
 | `EVENTS_DEVICE` | `gpu` if available, else `cpu` | where eventcv simulates (`gpu` = compute shader via Vulkan; same events as CPU) |
 | `EVENTS_WORKERS` | `6` | clips simulated in parallel per archive (`1` = sequential). eventcv exposes no GPU index, so all workers share GPU 0 even on a multi-GPU box |
 | `EVENTS_PROGRESS_SECS` | `30` | seconds between per-clip progress bars in the log |
-| `LANDMARKS` | unset | `1` = dense face landmarks per crop, as the last step (see [Face landmarks](#face-landmarks)) |
+| `LANDMARKS` | `1` | `1` = dense face landmarks per crop, as the last step (see [Face landmarks](#face-landmarks)) |
 | `LANDMARKS_METHOD` | `mediapipe` | `mediapipe` (478 pts) or `fa` (face_alignment, 68 pts) |
 | `LANDMARKS_DEVICE` | mediapipe: `cpu`, fa: `gpu` if available | `cpu` or `gpu`; for mediapipe, CPU workers are faster over many clips and leave the GPU to eventcv |
 | `LANDMARKS_WORKERS` | half the cores, max 8 (`fa`: 1) | clips processed in parallel for landmarks |
