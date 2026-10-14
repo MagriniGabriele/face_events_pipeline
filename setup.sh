@@ -4,7 +4,16 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-if [ ! -d seamless_interaction ]; then
+# Test for the project file, not just the directory: a clone of this repo made while
+# seamless_interaction/ was committed as a bare gitlink creates it as an EMPTY directory,
+# and "-d" would then skip the clone and leave pip with nothing to install.
+if [ ! -f seamless_interaction/pyproject.toml ]; then
+  if [ -d seamless_interaction ] && [ -n "$(ls -A seamless_interaction)" ]; then
+    echo "seamless_interaction/ exists but has no pyproject.toml." >&2
+    echo "Move or delete it, then re-run: rm -rf seamless_interaction && bash setup.sh" >&2
+    exit 1
+  fi
+  rmdir seamless_interaction 2>/dev/null || true
   git clone https://github.com/facebookresearch/seamless_interaction.git
 fi
 

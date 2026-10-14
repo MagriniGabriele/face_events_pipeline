@@ -1,0 +1,12 @@
+# the Meta dataset repo is cloned by setup.sh, never committed (a tracked gitlink makes
+# fresh clones produce an empty directory and breaks setup.sh)
+seamless_interaction/
+
+# runtime noise
+seamless_interaction_fs.log
+__pycache__/
+*.pyc
+
+# datasets and outputs
+si_*_raw/
+si_*_out/
